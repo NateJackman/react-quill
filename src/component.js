@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react'),
+  ReactDOM = require('react-dom'),
 	QuillToolbar = require('./toolbar'),
 	QuillMixin = require('./mixin'),
 	T = React.PropTypes;
@@ -124,9 +125,9 @@ var QuillComponent = React.createClass({
 
 		// NOTE: Custom formats will be stripped when creating
 		//       the editor, since they are not present there yet.
-		//       Therefore, we re-set the contents from state.
-		this.setState({ editor:editor }, function() {
-			this.setEditorContents(editor, this.state.value);
+		//       Therefore, we re-set the contents from the props
+		this.setState({ editor:editor }, function () {
+			this.setEditorContents(editor, this.props.value);
 		}.bind(this));
 	},
 
@@ -189,14 +190,14 @@ var QuillComponent = React.createClass({
 			// because it's shared between components.
 			config.modules = JSON.parse(JSON.stringify(config.modules));
 			config.modules.toolbar = {
-				container: this.refs.toolbar.getDOMNode()
+				container: ReactDOM.findDOMNode(this.refs.toolbar)
 			};
 		}
 		return config;
 	},
 
 	getEditorElement: function() {
-		return this.refs.editor.getDOMNode();
+		return ReactDOM.findDOMNode(this.refs.editor);
 	},
 
 	getEditorContents: function() {
